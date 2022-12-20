@@ -1,0 +1,26 @@
+## main.py
+
+from google.cloud import storage
+from google.cloud.storage import Blob
+
+def copy_blob(event, context):
+    file = event
+    file_name = file['name']
+    print(f"Processing file: {file ['name']}.")
+    storage_client = storage.Client(project='mindful-coder-367810')
+    source_bucket = storage_client.get_bucket('cloud-function-source-bucket1')
+    destination_bucket = storage_client.get_bucket('cloud-function-destination-bucket1')
+
+    blobs = list(source_bucket.list_blobs(prefix=''))
+    print(blobs)
+
+    for blob in blobs:
+      if blob.size > 1000 and blob.name == file_name:
+        print("Size of the blob is bytes "+ str(blob.size))
+        source_blob = source_bucket.blob(blob.name)
+        new_blob = source_bucket.copy_blob(
+        source_blob, destination_bucket, blob.name)
+        print(f'File moved from {source_blob} to {new_blob}')
+      else:
+        print("Size of the blob is bytes "+ str(blob.size))
+        print("File size is below 1000 bytes")
