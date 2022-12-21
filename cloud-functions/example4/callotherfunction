@@ -1,17 +1,18 @@
 ##NodeJS index.js
 
-const { GoogleAuth } = require('google-auth-library')
-exports.invokeFnA = async (req, res) => {
-  const url = https://us-central1-mindful-coder-367810.cloudfunctions.net/http-secured :
-  const targetAudience = url;
-  const auth = new GoogleAuth();
+const { GoogleAuth } = require('google-auth-library');
 
-  try {
-    const client = await auth.getIDTokenClient(targetAudience);
-    const FnAResp = await client.request({ url });
-    res.send ({ message: fnAResp.data })
-  } catch (err) {
-    console.error(error.message);
-    res.send({ message: err.message })
-  }
+exports.invokeFuncA = async (req, res) => {
+    const url = 'https://us-central1-mindful-coder-367810.cloudfunctions.net/function-a' ;
+    const targetAudience = url;
+    const auth = new GoogleAuth();
+
+    try {
+        const client = await auth.getIdTokenClient(targetAudience);
+        const funcAResp = await client.request({ url });
+        res.send({ message: funcAResp.data }) 
+    } catch (err) {
+        console.error(err.message);
+        res.send({ message: err.message })
+    }
 }
