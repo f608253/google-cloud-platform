@@ -1,0 +1,21 @@
+from google.cloud import storage
+import logging
+import base64
+
+storage_client = storage.Client()
+STORAGE_BUCKET = 'spikey-data-store'
+
+def write_issye_to_storage(request):
+    request.json = request.get_json()
+    received_message = base64.b64decode(request.json['message']['data'])\
+                             .decode('utf-8')
+    bucket = storage_client.get_bucket(STORAGE_BUCKET)
+
+    blob = bucket.blob('Tracked_Issues/issues.txt')
+    if blob.exists():
+        blob.download_to_filename('/tmp/issues.txt')
+    with open('/tmp/issues.txt','a') as issue_tracker:
+        issue_tracker.write('\n' + received_message)
+        issue_tracker.close()
+    blob.upload_from_filename('/tmp/issues.txt')                             
+        return f'<meta name="google-site-verification" content="e5GZlQKfTec8j4Q9xya3CJgdtowiViy0F8-KS04xpB4" />'
